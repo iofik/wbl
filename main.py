@@ -10,27 +10,22 @@ from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 
 from config import Config
+from message import MessageBuilder
 
 
 class MainScreen(GridLayout):
-    def __init__(self, actions, **kwargs):
+    def __init__(self, config, **kwargs):
         super(MainScreen, self).__init__(**kwargs)
         self.cols = 3
         self.buttons = []
-        for action in actions:
-            button = Button(text=action['title'])
+        for message in config.messages:
+            button = Button(text=message.name)
             self.buttons.append(button)
             self.add_widget(button)
 
 class WBLApp(App):
     def build(self):
-        return MainScreen([
-            { "title" : "30 min" },
-            { "title" : "1 hour" },
-            { "title" : "2 hours" },
-            { "title" : "ill" },
-            { "title" : "drunk" },
-        ])
+        return MainScreen(Config())
 
 if __name__ == '__main__':
     WBLApp().run()

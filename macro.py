@@ -27,12 +27,12 @@ class Macros(object):
             time += datetime.timedelta(minutes=minute-time.minute)
 
     def _subfun(self, m):
-        if m.group(1) not is None:
+        if m.group(1) is not None:
             return self.macros[m.group(1)]
         time = datetime.now()
         if m.group(2): # time offset
             self._adjust_time(time, int(m.group(2)))
-        return time:strftime('%H:%M')
+        return time.strftime('%H:%M')
 
     def expand(self, text):
         return self.macro_re.sub(self._subfun, text)

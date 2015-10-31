@@ -2,10 +2,10 @@ from macro import Macros
 
 class MessageConfig(object):
     __slots__ = ['name', 'subject', 'body', 'macros']
-    def __init__(self, message, templates, macros):
+    def __init__(self, message, bodies, macros):
         self.name       = message['name']
         self.subject    = message['subject']
-        self.body       = templates[message['body']]
+        self.body       = bodies[message['body']]
         self.macros     = macros
 
 class RTConfig(object):
@@ -24,12 +24,12 @@ class Config(object):
             'password' : '********',
             'queue' : 'notify',
         },
-        'content' : {
-            'templates' : {
+        'templates' : {
+            'body' : {
                 'common' : "Sorry for inconvenience.\n",
                 'ill' : "I feel bad today. Will stay home.\n",
             },
-            'messages' : [
+            'message' : [
                 {
                     'name' : "30 minutes",
                     'subject' : "{USER} WBL today, ETA is {TIME+30}",
@@ -54,9 +54,11 @@ class Config(object):
         }
     }
     
-    def __init__(self, config=Config.Sample):
-        templates = config['templates']
+    def __init__(self, config=Sample):
+        self.rt = RTConfig(config['rt'])
+
+        bodies = config['templates']['body']
+        messages = config['templates']['message']
         macros = Macros({ 'USER' : self.rt.user })
 
-        self.rt = RTConfig(config['rt'])
-        self.messages = [ MessageConfig(a, templates, macros) for a in config['messages'] ]
+        self.messages = [ MessageConfig(msg, bodies, macros) for msg in messages ]
