@@ -11,7 +11,7 @@ class MessageConfig(object):
 class RTConfig(object):
     __slots__ = ['url', 'user', 'password', 'queue']
     def __init__(self, rt):
-        self.url        = rt['url']
+        self.url        = rt['url'].rstrip('/') + '/REST/1.0/'
         self.user       = rt['user']
         self.password   = rt['password']
         self.queue      = rt['queue']
@@ -19,7 +19,7 @@ class RTConfig(object):
 class Config(object):
     Sample = {
         'rt' : {
-            'url' : 'https://www.iponweb.net/rt/REST/1.0/',
+            'url' : 'https://www.iponweb.net/rt',
             'user' : 'viofik',
             'password' : '********',
             'queue' : 'notify',

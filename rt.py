@@ -16,6 +16,6 @@ class RT(object):
             subject=message.subject,
             body=message.body.replace('\n', '\n '),
         )
-        r = requests.post(rt.url, auth=(rt.user, rt.password), data={'content' : content})
+        r = requests.post(rt.url+'ticket/new', auth=(rt.user, rt.password), data={'content' : content})
         m = TicketCreatedRE.search(r.text)
         return m.group(1) if m else None
