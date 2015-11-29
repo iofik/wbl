@@ -36,17 +36,12 @@ function Notice:get_eta()
         eta = os.date('*t')
         eta.hour = self.eta.hour
         eta.min  = self.eta.min
-
-        if os.time(eta) < os.time() then
-            return true, nil, "ETA is in the past"
-        end
+        assert(os.time(eta) > os.time(), "ETA is in the past")
     elseif self.eta_plus then
         eta = adjust_time(os.time(), self.eta_plus)
-    else
-        return false
     end
 
-    return true, eta
+    return eta
 end
 
 local function expand_macros(macros, text):
@@ -55,25 +50,16 @@ end
 
 function Notice:create_ticket(rt)
     local macros = self.macros
-    local has_eta, eta, error_msg = self:get_eta()
+    local eta = self:get_eta()
 
-    if has_eta then
-        if not eta then
-            return nil, error_msg
-        end
-
+    if eta then
         macros = setmetatable({ ETA = os.date('%H:%M', eta) }, { __index = macros })
     end
 
     local subject = expand_macros(macros, self.subject)
     local body    = expand_macros(macros, self.body)
-    local ticket_id
 
-    ticket_id, error_msg = rt:create_ticket(subject, body)
-
-    if not ticket_id then
-        return nil, error_msg
-    end
+    local ticket_id = rt:create_ticket(subject, body)
 
     return {
         id  = ticket_id,

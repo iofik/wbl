@@ -3,7 +3,7 @@ local M = {}
 local RT = {}
 
 function RT:create_ticket(subject, body)
-    return 123456, nil -- TODO
+    return 123456 -- TODO
 end
 
 function RT:update_ticket(id, body)
