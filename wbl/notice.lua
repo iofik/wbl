@@ -23,7 +23,7 @@ local function adjust_time(time, offset) -- some empirical magic
     if align then
         orig_min = os.date('*t', time).min
         aligned_min = math.ceil((orig_min + align - lean_back) / align) * align
-        time += (aligned_min - orig_min) * 60
+        time = time + (aligned_min - orig_min) * 60
     end
 
     return time
@@ -44,7 +44,7 @@ function Notice:get_eta()
     return eta
 end
 
-local function expand_macros(macros, text):
+local function expand_macros(macros, text)
     return text:gsub('{([^{}]+)}', macros)
 end
 

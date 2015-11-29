@@ -3,7 +3,7 @@ local M = {}
 local Notice = require 'wbl.notice'
 local RT = require 'wbl.rt'
 
-local Sample = {
+local DefaultConfig = {
     rt = {
         url         = 'https://www.iponweb.net/rt',
         user        = 'user',
@@ -48,7 +48,9 @@ local Sample = {
     }
 }
     
-function M.parse(config=Sample)
+function M.parse(config)
+    config = config or DefaultConfig
+
     local rt = RT.new(config.rt)
     local macros = { USER = rt.user }
     local notices = {}
@@ -62,6 +64,5 @@ function M.parse(config=Sample)
         notices = notices,
     }
 end
-
 
 return M
