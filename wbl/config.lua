@@ -1,6 +1,5 @@
 local M = {}
 
-local Macros = require 'wbl.macros'
 local Notice = require 'wbl.notice'
 local RT = require 'wbl.rt'
 
@@ -51,7 +50,7 @@ local Sample = {
     
 function M.parse(config=Sample)
     local rt = RT.new(config.rt)
-    local macros = Macros.new{ USER = rt.user }
+    local macros = { USER = rt.user }
     local notices = {}
 
     for i, notice in ipairs(config.notices) do

@@ -49,6 +49,10 @@ function Notice:get_eta()
     return true, eta
 end
 
+local function expand_macros(macros, text):
+    return text:gsub('{([^{}]+)}', macros)
+end
+
 function Notice:create_ticket(rt)
     local macros = self.macros
     local has_eta, eta, error_msg = self:get_eta()
@@ -61,8 +65,8 @@ function Notice:create_ticket(rt)
         macros = setmetatable({ ETA = os.date('%H:%M', eta) }, { __index = macros })
     end
 
-    local subject = macros.expand(self.subject)
-    local body    = macros.expand(self.body)
+    local subject = expand_macros(macros, self.subject)
+    local body    = expand_macros(macros, self.body)
     local ticket_id
 
     ticket_id, error_msg = rt:create_ticket(subject, body)
