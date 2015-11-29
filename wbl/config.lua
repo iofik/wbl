@@ -1,24 +1,8 @@
 local M = {}
 
-local macros = require 'wbl.macros'
-
-local function TemplateConfig(template, bodies, macros)
-    return {
-        name       = template.name,
-        subject    = template.subject,
-        body       = bodies[template.body],
-        macros     = macros,
-    }
-end
-
-local function RTConfig(rt)
-    return {
-        url        = rt.url:gsub('/*$', '/REST/1.0/'),
-        user       = rt.user,
-        password   = rt.password,
-        queue      = rt.queue,
-    }
-end
+local Macros = require 'wbl.macros'
+local Notice = require 'wbl.notice'
+local RT = require 'wbl.rt'
 
 local Sample = {
     rt = {
@@ -28,48 +12,55 @@ local Sample = {
         queue       = 'notify',
     },
     templates = {
-        body = {
-            common  = "Sorry for inconvenience.\n",
-            ill     = "I feel bad today. Will stay home.\n",
+        wbl = {
+            subject     = "{USER} WBL today, ETA is {ETA}",
+            body        = "Sorry for inconvenience.\n",
         },
-        message = {
-            {
-                name    = "+30 minutes",
-                subject = "{USER} WBL today, ETA is {TIME+30}",
-                body    = 'common',
-            },
-            {
-                name    = "+1 hour",
-                subject = "{USER} WBL today, ETA is {TIME+60}",
-                body    = 'common',
-            },
-            {
-                name    = "+2 hours",
-                subject = "{USER} WBL today, ETA is {TIME+120}",
-                body    = 'common',
-            },
-            {
-                name    = "ill",
-                subject = "{USER} is ill",
-                body    = 'ill',
-            },
+        ill = {
+            subject     = "{USER} is ill",
+            body        = "I feel bad today. Will stay home.\n",
+        },
+    },
+    notices = {
+        {
+            name        = "+30 minutes",
+            template    = 'wbl',
+            eta_plus    = 30,
+        },
+        {
+            name        = "+1 hour",
+            template    = 'wbl',
+            eta_plus    = 60,
+        },
+        {
+            name        = "+2 hours",
+            template    = 'wbl',
+            eta_plus    = 120,
+        },
+        {
+            name        = "15:00",
+            template    = 'wbl',
+            eta         = '15:00',
+        },
+        {
+            name        = "ill",
+            template    = 'ill',
         },
     }
 }
     
 function M.parse(config=Sample)
-    local rt = RTConfig(config.rt)
-    local macros = macros.init{ USER = rt.user }
-    local bodies = config.templates.body
-    local templates = {}
+    local rt = RT.new(config.rt)
+    local macros = Macros.new{ USER = rt.user }
+    local notices = {}
 
-    for i,template in ipairs(config.templates.message) do
-        templates[i] = TemplateConfig(template, bodies, macros)
+    for i, notice in ipairs(config.notices) do
+        notices[i] = Notice.new(notice, config.templates, macros)
     end
 
     return {
-        rt          = rt,
-        templates   = templates,
+        rt      = rt,
+        notices = notices,
     }
 end
 
