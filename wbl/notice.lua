@@ -22,7 +22,7 @@ local function adjust_time(time, offset) -- some empirical magic
 
     if align then
         orig_min = os.date('*t', time).min
-        aligned_min = math.ceil((orig_min + align - lean_back) / align) * align
+        aligned_min = math.floor((orig_min + align - lean_back) / align) * align
         time = time + (aligned_min - orig_min) * 60
     end
 
@@ -86,8 +86,8 @@ function M.new(config, templates, macros)
         name        = config.name,
         subject     = template.subject,
         body        = template.body,
-        eta         = parse_eta(template.eta),
-        eta_plus    = template.eta_plus,
+        eta         = parse_eta(config.eta),
+        eta_plus    = config.eta_plus,
         macros      = macros,
     }, { __index = Notice })
 end
