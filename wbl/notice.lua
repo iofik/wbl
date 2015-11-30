@@ -36,7 +36,8 @@ function Notice:get_eta()
         eta = os.date('*t')
         eta.hour = self.eta.hour
         eta.min  = self.eta.min
-        assert(os.time(eta) > os.time(), "ETA is in the past")
+        eta = os.time(eta)
+        assert(eta > os.time(), "ETA is in the past")
     elseif self.eta_plus then
         eta = adjust_time(os.time(), self.eta_plus)
     end

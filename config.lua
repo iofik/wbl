@@ -1,32 +1,19 @@
-application =
-{
+local ui = require 'wbl.ui'
 
-	content =
-	{
-		width = 320,
-		height = 480, 
-		scale = 'zoomStretch',
-		fps = 30,
-		
-		--[[
-		imageSuffix =
-		{
-			    ["@2x"] = 2,
-		},
-		--]]
+application = {
+	content = {
+		width           = ui.ScreenWidth,
+		height          = ui.ScreenHeight, 
+		scale           = 'zoomStretch',
+		fps             = 30,
+		--imageSuffix     = { ["@2x"] = 2 },
 	},
-
 	--[[
 	-- Push notifications
-	notification =
-	{
-		iphone =
-		{
-			types =
-			{
-				"badge", "sound", "alert", "newsstand"
-			}
-		}
+	notification = {
+		iphone = {
+			types = { 'badge', 'sound', 'alert', 'newsstand' },
+		},
 	},
 	--]]    
 }

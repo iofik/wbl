@@ -4,8 +4,7 @@
 --
 -----------------------------------------------------------------------------------------
 local Config = require 'wbl.config'
+local UI = require 'wbl.ui'
 
 local config = Config.parse()
-local notice = config.notices[1]
-local ticket = notice:create_ticket(config.rt)
-print(ticket.id, os.date(nil, ticket.eta))
+UI.draw_buttons(config)
