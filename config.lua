@@ -1,4 +1,4 @@
-local ui = require 'wbl.ui.config'
+local ui = require 'wbl.ui'
 
 application = {
 	content = {

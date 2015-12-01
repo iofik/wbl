@@ -3,8 +3,6 @@
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
-local Config = require 'wbl.config'
-local UI = require 'wbl.ui.main'
+local UI = require 'wbl.ui'
 
-local config = Config.parse()
-UI.draw_buttons(config)
+UI.switch(require 'wbl.screen.main')

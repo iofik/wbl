@@ -48,9 +48,7 @@ local DefaultConfig = {
     }
 }
     
-function M.parse(config)
-    config = config or DefaultConfig
-
+function M._parse(config)
     local rt = RT.new(config.rt)
     local macros = { USER = rt.user }
     local notices = {}
@@ -63,6 +61,10 @@ function M.parse(config)
         rt      = rt,
         notices = notices,
     }
+end
+
+function M.get()
+    return M._parse(DefaultConfig)
 end
 
 return M

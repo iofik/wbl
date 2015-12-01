@@ -1,23 +1,27 @@
 local M = {}
-local C = require 'wbl.ui.config'
+local UI = require 'wbl.ui'
 
 local widget = require 'widget'
+local display = require 'display'
 
 local Margin = 4
-local ButtonWidth = math.floor((C.ScreenWidth - Margin) / 3) - Margin
-local ButtonHeight = math.floor((C.ScreenHeight - Margin) / 6) - Margin
+local ButtonWidth = math.floor((UI.ScreenWidth - Margin) / 3) - Margin
+local ButtonHeight = math.floor((UI.ScreenHeight - Margin) / 6) - Margin
 
 local function calc_button_pos(i)
     local x = (i-1) % 3
     local y = (i-x-1) / 3
 
-    x = C.ScreenWidth  - 0.5*Margin - (x + 0.5) * (ButtonWidth  + Margin)
-    y = C.ScreenHeight - 0.5*Margin - (y + 0.5) * (ButtonHeight + Margin)
+    x = UI.ScreenWidth  - 0.5*Margin - (x + 0.5) * (ButtonWidth  + Margin)
+    y = UI.ScreenHeight - 0.5*Margin - (y + 0.5) * (ButtonHeight + Margin)
 
     return x, y
 end
 
-function M.draw_buttons(config)
+function M.draw()
+    local config = require('wbl.config').get()
+    local group = display.newGroup()
+
     for i, notice in ipairs(config.notices) do
         local x, y = calc_button_pos(i)
         local function onRelease()
@@ -25,7 +29,7 @@ function M.draw_buttons(config)
             print(ticket.id, os.date(nil, ticket.eta))
         end
 
-        widget.newButton{
+        local button = widget.newButton{
             x           = x,
             y           = y,
             onRelease   = onRelease,
@@ -35,7 +39,11 @@ function M.draw_buttons(config)
             height      = ButtonHeight,
             fillColor   = { default={ 0.1, 0.1, 0.1, 1 }, over={ 1, 0.1, 0.7, 0.4 } },
         }
+
+        group:insert(button)
     end
+
+    return group
 end
 
 return M
