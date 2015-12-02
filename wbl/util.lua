@@ -1,4 +1,5 @@
 --- Useful extensions to Lua, included globally.
+
 _G.Class = {}
 
 function _G.Class:new(o)
