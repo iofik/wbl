@@ -3,6 +3,5 @@
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
-local UI = require 'wbl.ui'
-
-UI.switch(require 'wbl.screen.main')
+require 'wbl.util'
+require 'wbl.screen.main'.new():switch()

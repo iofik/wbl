@@ -1,9 +1,7 @@
-local ui = require 'wbl.ui'
-
 application = {
 	content = {
-		width           = ui.ScreenWidth,
-		height          = ui.ScreenHeight, 
+		width           = 320,
+		height          = 480,
 		scale           = 'zoomStretch',
 		fps             = 30,
 		--imageSuffix     = { ["@2x"] = 2 },

@@ -1,31 +1,40 @@
 local M = {}
-local UI = require 'wbl.ui'
+
+local Base = require 'wbl.screen.base'
+local Config = require 'wbl.config'
 
 local widget = require 'widget'
 local display = require 'display'
 
+
+----------------------------------------
+local ScreenWidth = display.contentWidth
+local ScreenHeight = display.contentHeight
 local Margin = 4
-local ButtonWidth = math.floor((UI.ScreenWidth - Margin) / 3) - Margin
-local ButtonHeight = math.floor((UI.ScreenHeight - Margin) / 6) - Margin
+local ButtonWidth = math.floor((ScreenWidth - Margin) / 3) - Margin
+local ButtonHeight = math.floor((ScreenHeight - Margin) / 6) - Margin
 
 local function calc_button_pos(i)
     local x = (i-1) % 3
     local y = (i-x-1) / 3
 
-    x = UI.ScreenWidth  - 0.5*Margin - (x + 0.5) * (ButtonWidth  + Margin)
-    y = UI.ScreenHeight - 0.5*Margin - (y + 0.5) * (ButtonHeight + Margin)
+    x = ScreenWidth  - 0.5*Margin - (x + 0.5) * (ButtonWidth  + Margin)
+    y = ScreenHeight - 0.5*Margin - (y + 0.5) * (ButtonHeight + Margin)
 
     return x, y
 end
 
-function M.draw()
-    local config = require('wbl.config').get()
+
+----------------------------------------
+local Screen = Base.Screen:new{}
+
+function Screen:draw()
     local group = display.newGroup()
 
-    for i, notice in ipairs(config.notices) do
+    for i, notice in ipairs(self.config.notices) do
         local x, y = calc_button_pos(i)
         local function onRelease()
-            local ticket = notice:create_ticket(config.rt)
+            local ticket = notice:create_ticket(self.config.rt)
             print(ticket.id, os.date(nil, ticket.eta))
         end
 
@@ -44,6 +53,12 @@ function M.draw()
     end
 
     return group
+end
+
+
+----------------------------------------
+function M.new()
+    return Screen:new{ config = Config.get() }
 end
 
 return M
