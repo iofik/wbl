@@ -1,7 +1,8 @@
 local M = {}
 
-local Base = require 'wbl.screen.base'
 local Config = require 'wbl.config'
+local Base = require 'wbl.screen.base'
+local Ticket = require 'wbl.screen.ticket'
 
 local widget = require 'widget'
 local display = require 'display'
@@ -28,14 +29,11 @@ end
 ----------------------------------------
 local Screen = Base.Screen:new{}
 
-function Screen:draw()
-    local group = display.newGroup()
-
+function Screen:draw(group)
     for i, notice in ipairs(self.config.notices) do
         local x, y = calc_button_pos(i)
         local function onRelease()
-            local ticket = notice:create_ticket(self.config.rt)
-            print(ticket.id, os.date(nil, ticket.eta))
+            Ticket.new(notice):switch()
         end
 
         local button = widget.newButton{
@@ -51,8 +49,6 @@ function Screen:draw()
 
         group:insert(button)
     end
-
-    return group
 end
 
 
