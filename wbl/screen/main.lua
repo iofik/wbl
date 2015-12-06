@@ -1,8 +1,7 @@
 local M = {}
 
 local Config = require 'wbl.config'
-local Base = require 'wbl.screen.base'
-local Ticket = require 'wbl.screen.ticket'
+local ui = require 'wbl.ui'
 
 local widget = require 'widget'
 local display = require 'display'
@@ -27,34 +26,29 @@ end
 
 
 ----------------------------------------
-local Screen = Base.Screen:new{}
+local function create_ticket(notice)
+    local ok, ticket = pcall(notice.create_ticket, notice, Config.get().rt)
+    ui.switch(ok and 'status' or 'error', ticket)
+end
 
-function Screen:draw(group)
-    for i, notice in ipairs(self.config.notices) do
+
+----------------------------------------
+function M.draw(group)
+    local config = Config.get()
+    for i, notice in ipairs(config.notices) do
         local x, y = calc_button_pos(i)
-        local function onRelease()
-            Ticket.new(notice):switch()
-        end
-
-        local button = widget.newButton{
+        local button = ui.newButton{
             x           = x,
             y           = y,
-            onRelease   = onRelease,
+            onRelease   = function() create_ticket(notice) end,
             label       = notice.name,
-            shape       = 'rect',
             width       = ButtonWidth,
             height      = ButtonHeight,
-            fillColor   = { default={ 0.1, 0.1, 0.1, 1 }, over={ 1, 0.1, 0.7, 0.4 } },
         }
 
         group:insert(button)
     end
 end
 
-
-----------------------------------------
-function M.new()
-    return Screen:new{ config = Config.get() }
-end
 
 return M

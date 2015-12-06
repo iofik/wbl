@@ -4,4 +4,4 @@
 --
 -----------------------------------------------------------------------------------------
 require 'wbl.util'
-require 'wbl.screen.main'.new():switch()
+require 'wbl.ui'.switch('main')
