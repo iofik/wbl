@@ -7,8 +7,9 @@ local display = require 'display'
 
 
 function M.draw(group, message)
-    group:insert(display.newText("ERROR!", 160, 240))
-    group:insert(display.newText(message or '', 160, 260))
+    message = string.gsub(message or '', '^.*%.lua:%d+: *', '', 1)
+    group:insert(display.newText("ERROR", 160, 240))
+    group:insert(display.newText(message, 160, 260))
     group:insert(ui.newButton{
             x           = 160,
             y           = 450,
