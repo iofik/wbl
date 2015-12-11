@@ -1,6 +1,7 @@
 local M = {}
 
-local Config = require 'wbl.config'
+local config = require 'wbl.config'
+local status = require 'wbl.status'
 local ui = require 'wbl.ui'
 
 local widget = require 'widget'
@@ -27,14 +28,19 @@ end
 
 ----------------------------------------
 local function create_ticket(notice)
-    local ok, ticket = pcall(notice.create_ticket, notice, Config.get().rt)
+    local ok, ticket = pcall(function()
+        local ticket = notice:create_ticket(config.get().rt)
+        status.set(ticket)
+        return ticket
+    end)
+
     ui.switch(ok and 'status' or 'error', ticket)
 end
 
 
 ----------------------------------------
 function M.draw(group)
-    local config = Config.get()
+    local config = config.get()
     for i, notice in ipairs(config.notices) do
         local x, y = calc_button_pos(i)
         local button = ui.newButton{

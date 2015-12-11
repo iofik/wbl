@@ -1,7 +1,7 @@
 local M = {}
 
-local Notice = require 'wbl.notice'
-local RT = require 'wbl.rt'
+local notice = require 'wbl.notice'
+local rt = require 'wbl.rt'
 
 local DefaultConfig = {
     rt = {
@@ -47,14 +47,16 @@ local DefaultConfig = {
         },
     }
 }
-    
-function M._parse(config)
-    local rt = RT.new(config.rt)
+
+local current
+
+local function parse(config)
+    local rt = rt.new(config.rt)
     local macros = { USER = rt.user }
     local notices = {}
 
-    for i, notice in ipairs(config.notices) do
-        notices[i] = Notice.new(notice, config.templates, macros)
+    for i, notice_cfg in ipairs(config.notices) do
+        notices[i] = notice.new(notice_cfg, config.templates, macros)
     end
 
     return {
@@ -63,8 +65,22 @@ function M._parse(config)
     }
 end
 
+function M.read()
+    if not current then
+        current = read_json('config') or DefaultConfig
+    end
+
+    return current
+end
+
+function M.write()
+    if not write_json('config', current) then
+        error("Cannot save configuration")
+    end
+end
+
 function M.get()
-    return M._parse(DefaultConfig)
+    return parse(M.read())
 end
 
 return M

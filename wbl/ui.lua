@@ -1,9 +1,21 @@
 local M = {}
 
+local status = require 'wbl.status'
+
 local display = require 'display'
 local widget = require 'widget'
 
 local current
+
+function M.start()
+    local ticket = status.get()
+
+    if ticket then
+        M.switch('status', ticket)
+    else
+        M.switch('main')
+    end
+end
 
 function M.switch(name, ...)
     if current then
